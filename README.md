@@ -1,11 +1,7 @@
 ## What is this fork for?
 Currently, I am trying to implement PID balancing on the sideboard's MCU.
-The block scheme looks approximately like this:
+Ideally, this would work like this:
 MPU6050(euler's angle) ----> PID ----motor speed commands(UART)----> FOC ALGORITHM ----> MOTORS
-
-\_________________________________/                            \______________________________/
-
-      SIDEBOARD                                                           MAIN BOARD
       
 I'd be happy to hear any feedback or advice on how to do this properly.
 # hoverboard-sideboard-hack-GD
