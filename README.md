@@ -2,7 +2,9 @@
 Currently, I am trying to implement PID balancing on the sideboard's MCU.
 The block scheme looks approximately like this:
 MPU6050(euler's angle) ----> PID ----motor speed commands(UART)----> FOC ALGORITHM ----> MOTORS
+
 \_________________________________/                            \______________________________/
+
       SIDEBOARD                                                           MAIN BOARD
       
 I'd be happy to hear any feedback or advice on how to do this properly.
