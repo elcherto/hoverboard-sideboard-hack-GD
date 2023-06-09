@@ -26,7 +26,7 @@ Current state of things:
   
 
 
-##Original README.md from Emanuel Feru's repository:
+## Original README.md from Emanuel Feru's repository:
 
 Table of Contents
 =======================
