@@ -1,7 +1,8 @@
 
 ## hoverboard-sideboard-hack-GD with a PID balance controller
 
-This repository implements the firmware for the hoverboard sideboards. The hoverboard comes with two identical sideboards that can be flashed with this firmware.
+What does this modified firmware do?
+It aims to partially restore the hoverboard functionality of a hoverboard with custom FW. So far, it still needs a lot of improvement. This project is in early alpha stages, which means that it would probably not work on your hardware out of the box. Only recommended for people who know what they are doing and aren't afraid of damaging their hardware.
 
 Current state of things:
 *  -The two boards communicate well. The ESC runs FOC firmware by Emanuel Feru.
