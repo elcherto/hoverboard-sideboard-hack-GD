@@ -6,15 +6,10 @@ It aims to partially restore the hoverboard functionality of a hoverboard with c
 
 Current state of things:
 *  -The two boards communicate well. The ESC runs FOC firmware by Emanuel Feru.
-*  -The protocol is USART, the ESC board should be flashed with "VARIANT_USART" in order to start communicating 
-*  with the sensor board
+*  -The protocol is USART, the ESC board should be flashed with "VARIANT_USART" in order to start communicating with the sensor board
 *  -In the ESC firmware, "#define TANK_STEERING" should be uncommented for correct functioning
-*  -I still haven't completely figured out the right PIDs, I am also not sure which signs the PID weights
-*  should have. Too tired to figure it out today. With current PIDs, the hoverboard is wobbly and had a tendency
-*  to oscillate uncontrollably.
-*  -At this moment, there is only one sensor board which communicates with the controller. This means that in cu
-*  rrent configuration, you would only be able to ride the hoverboard like a segway, without steering and with t
-*  wo halves bolted together firmly 
+*  -I still haven't completely figured out the right PIDs, I am also not sure which signs the PID weights should have. Too tired to figure it out today. With current PIDs, the hoverboard is wobbly and had a tendency to oscillate uncontrollably.
+*  -At this moment, there is only one sensor board which communicates with the controller. This means that in current configuration, you would only be able to ride the hoverboard like a segway, without steering and with two halves bolted together firmly 
 
   TODO: 
     
@@ -31,7 +26,7 @@ Current state of things:
   
 
 
-Original README.md from Emanuel Feru's repository:
+##Original README.md from Emanuel Feru's repository:
 
 Table of Contents
 =======================
