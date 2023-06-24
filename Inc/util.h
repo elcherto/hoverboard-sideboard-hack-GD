@@ -161,7 +161,7 @@ void input_init(void);
 
 /* handle functions */
 void handle_mpu6050(void);
-void handle_sensors(void);
+void handle_sensors(uint8_t *pid_on);
 void handle_usart(void);
 void pid_handle_usart(PTR_PID_CONTROLLER pid);
 void handle_leds(void);

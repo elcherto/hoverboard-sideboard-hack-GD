@@ -112,19 +112,18 @@
   -The protocol is USART, the ESC board should be flashed with "VARIANT_USART" in order to start communicating 
   with the sensor board
   -In the ESC firmware, "#define TANK_STEERING" should be uncommented for correct functioning
-  -I still haven't completely figured out the right PIDs, I am also not sure which signs the PID weights
-  should have. Too tired to figure it out today. With current PIDs, the hoverboard is wobbly and had a tendency
-  to oscillate uncontrollably.
+  -Also, SPD_MODE and FOC_CTRL should be defined in the ESC firmware
   -At this moment, there is only one sensor board which communicates with the controller. This means that in cu
   rrent configuration, you would only be able to ride the hoverboard like a segway, without steering and with t
   wo halves bolted together firmly 
+
   TODO: 
     
-    - Adjust the PIDs for the hoverboard to be rideable
-    - Solve the problem with wheels spinning uncontrolably during 3 sec after startup
-    - Make the foot sensors activate the motors
+    - Adjust the PIDs for the hoverboard to be rideable (almost DONE)
+    - Solve the problem with wheels spinning uncontrolably during 3 sec after startup (Sort of fixed)
+    - Make the foot sensors activate the motors  (DONE)
 
-    + Make the lights respond to battery levels?
+    + Make the lights respond to battery levels? 
     + Look into options for connecting a "steering bar", similar to those of segways. (ADC? Arduino+UART? I2C ADC?)
     + Possible "pushback" or "beeping" speed limiter?
     + Implement PID settings editing from AUX UART (is it even possible?)
@@ -132,23 +131,24 @@
   
   */
 
-  //PID controller settings
-  /*
-  ADJUST LOG
-  P:
-    0.2 - crazy oscillation, unusable
-    0.05 - pretty weak, but no oscillations!
-    0.09 - moderate strenght, not too weak, but slight signs of oscillation
-    *I will have to retest it, I changed some logic in the controller
-      */
-  #define def_kp             0.15
-  #define def_ki             -0.003
-  #define def_kd             0 
+/*
+PID ADJUST LOG:
+I no
+*/
+
+  #define def_kp             0.12 //0.1 - crazy oscillation; 0.05 - weak
+  #define def_ki             0.0005 //Was in stable oscillation at 0.01
+  #define def_kd             0
   #define def_setpoint       0
   #define def_I_limit        10000
   #define def_outputLimit    300
-  #define def_sampleTime     1
-  #define def_direction      -1
+  #define def_sampleTime     10
+  #define def_direction      1
+
+  //Delay at start is a bandaid to fix the uncontrollable motor spinning 5 sec after start
+  #define DELAY_AT_START 5000             //At start, wait this amount of ms before activating motors
+
+
 
 
   #ifdef DEBUG

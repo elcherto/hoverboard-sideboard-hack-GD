@@ -7,15 +7,14 @@ It aims to partially restore the hoverboard functionality of a hoverboard with c
 Current state of things:
 *  -The two boards communicate well. The ESC runs FOC firmware by Emanuel Feru.
 *  -The protocol is USART, the ESC board should be flashed with "VARIANT_USART" in order to start communicating with the sensor board
-*  -In the ESC firmware, "#define TANK_STEERING" should be uncommented for correct functioning
-*  -I still haven't completely figured out the right PIDs, I am also not sure which signs the PID weights should have. Too tired to figure it out today. With current PIDs, the hoverboard is wobbly and had a tendency to oscillate uncontrollably.
+*  -In the ESC firmware config, TANK_STEERING, FOC_CTRL and SPD_MODE should be set
 *  -At this moment, there is only one sensor board which communicates with the controller. This means that in current configuration, you would only be able to ride the hoverboard like a segway, without steering and with two halves bolted together firmly 
+*  -I had debugged and fixed my PID controller
 
   TODO: 
     
-    * - Adjust the PIDs for the hoverboard to be rideable
-    * - Solve the problem with wheels spinning uncontrolably during 3 sec after startup
-    * - Make the foot sensors activate the motors
+    * - Fine-tune the PID coefficients for smooth riding
+    * - Enable ADC for the steering bar's potentiometer
 
     * + Make the lights respond to battery levels?
     * + Look into options for connecting a "steering bar", similar to those of segways. (ADC? Arduino+UART? I2C ADC?)

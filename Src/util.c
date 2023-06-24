@@ -259,7 +259,7 @@ void handle_mpu6050(void) {
 /*
  * Handle of the optical sensors
  */
-void handle_sensors(void) {
+void handle_sensors(uint8_t *pid_on) {
     sensor1_read = gpio_input_bit_get(SENSOR1_GPIO_Port, SENSOR1_Pin);
     sensor2_read = gpio_input_bit_get(SENSOR2_GPIO_Port, SENSOR2_Pin);
 
@@ -295,6 +295,11 @@ void handle_sensors(void) {
     if (sensor2 == SET) {
         // Sensor ACTIVE: Do something here (continuous task)
     }
+    if(sensor1 == SET || sensor2 == SET){
+        *pid_on = 1;
+    } else {
+        *pid_on = 0;
+    }
 }
 
 //TODO: Create descriptions for those functions
@@ -307,6 +312,7 @@ void pid_get_motor_output(PTR_PID_CONTROLLER pid, int16_t *output){
 void pid_log_output(PTR_PID_CONTROLLER pid){
     log_i("PID controller output:%d\r\n",pid->motor_output);
 }
+
 void pid_init(PTR_PID_CONTROLLER pid,
               float P_k,
               float I_k,
@@ -318,6 +324,12 @@ void pid_init(PTR_PID_CONTROLLER pid,
     pid->Kp             = P_k;
     pid->Ki             = I_k;
     pid->Kd             = D_k;
+
+    pid->P = 0;
+    pid->I = 0;
+    pid->D = 0;
+    pid->I_accumulator = 0;
+    
     pid->setpoint       = setP;
     pid->I_limit        = I_lim;
     pid->outputLimit    = out_lim;
@@ -325,19 +337,18 @@ void pid_init(PTR_PID_CONTROLLER pid,
     pid->dir            = direction;
     pid->motor_output   = 0;
     pid->output         = 0;
+    pid->last_err       = 0;
+    pid->err            = 0;
     pid->input          = setP;
 }
 
-void pid_set_sample_time(PTR_PID_CONTROLLER pid, uint16_t stime){
-    pid->sampleTime = stime;
-}
 /*
  * Step the PID controller
  */
 void pid_compute(PTR_PID_CONTROLLER pid){
     pid->err = pid->setpoint - pid->input;
     //Calculate P,I,D components
-    pid->P = pid->err                                    * pid->dir       * pid->Kp;
+    pid->P = pid->err                                    * pid->dir     * pid->Kp;
     pid->I = pid->I_accumulator                          * pid->dir     * pid->Ki;
     pid->D = (pid->err - pid->last_err)/pid->sampleTime  * pid->dir     * pid->Kd;
     //Sum all the components and apply limits
@@ -352,7 +363,9 @@ void pid_compute(PTR_PID_CONTROLLER pid){
                                -(pid->I_limit), 
                                 (pid->I_limit));
     //Remember last value for the Derivative
+
     pid->last_err = pid->err;
+
 }
 
 /*
@@ -446,8 +459,14 @@ void pid_handle_usart(PTR_PID_CONTROLLER pid) {
     #ifdef PID_USART_CONTROL
         if (main_loop_counter % 5 == 0 && dma_transfer_number_get(USART1_TX_DMA_CH) == 0) {     // Check if DMA channel counter is 0 (meaning all data has been transferred)
             Sideboard.start     = (uint16_t)SERIAL_START_FRAME;
-            Sideboard.cmd1      = (int16_t)pid->motor_output;
-            Sideboard.cmd2      = (int16_t)pid->motor_output; 
+            //if (main_loop_counter >= DELAY_AT_START) {
+                Sideboard.cmd1      = (int16_t)pid->motor_output;
+                Sideboard.cmd2      = (int16_t)pid->motor_output; 
+            /*} else {
+                Sideboard.cmd1      = (int16_t)0;
+                Sideboard.cmd2      = (int16_t)0; 
+            }
+            */
             Sideboard.checksum  = (uint16_t)(Sideboard.start ^ Sideboard.cmd1 ^ Sideboard.cmd2);
         
             dma_channel_disable(USART1_TX_DMA_CH);
