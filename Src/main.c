@@ -31,12 +31,14 @@
 
 uint32_t     main_loop_counter;                         // main loop counter to perform task scheduling inside main()
 uint8_t      pid_on;                                    // PID control on/off
+uint16_t     adc_raw;
 PID_CONTROLLER pid_data;
 
 int main(void)
 {
     systick_config();                                   // SysTick config
     gpio_config();                                      // GPIO config
+    adc_config();                                       // ADC config
 
     usart_config(USART_MAIN, USART_MAIN_BAUD);          // USART MAIN config
     #if defined(SERIAL_AUX_RX) || defined(SERIAL_AUX_TX)
@@ -44,27 +46,34 @@ int main(void)
     #endif
     usart_nvic_config();                                // USART interrupt configuration
 
-    i2c_config();                                       // I2C config
-    i2c_nvic_config();                                  // I2C interrupt configuration
+    //i2c_config();                                       // I2C config
+    //i2c_nvic_config();                                  // I2C interrupt configuration
     input_init();                                       // Input initialization
     pid_init(&pid_data, def_kp, def_ki, def_kd, def_setpoint, def_outputLimit, def_I_limit, def_direction, def_sampleTime);
 
     while(1) {
-
+        log_i("Main(");
         delay_1ms(DELAY_IN_MAIN_LOOP);
 
         pid_read_mpu_angle(&pid_data);
 
         if(main_loop_counter % def_sampleTime == 0){
           pid_compute(&pid_data);
-          pid_log_output(&pid_data);
+          //pid_log_output(&pid_data);
         }
 
+        
+        if (SET == adc_flag_get(ADC_FLAG_EOC)){
+          adc_raw = ADC_RDATA;
+          adc_software_trigger_enable(ADC_REGULAR_CHANNEL);
+          adc_flag_clear(ADC_FLAG_EOC);
+          log_i("ADC reading: %d", adc_raw);
+        }
 
         
 
-        handle_mpu6050();                               // Handle of the MPU-6050 IMU sensor
-        handle_sensors(&pid_on);                               // Handle of the optical sensors
+        //handle_mpu6050();                               // Handle of the MPU-6050 IMU sensor
+        //handle_sensors(&pid_on);                               // Handle of the optical sensors
         #ifdef PID_USART_CONTROL
         if(main_loop_counter > DELAY_AT_START && pid_on){
           pid_handle_usart(&pid_data);                  // Handle the simpler version of USART
@@ -72,8 +81,10 @@ int main(void)
         #else
           handle_usart();                               // Handle of the Hovercar USART data
         #endif
-        handle_leds();                                  // Handle of the sideboard LEDs
+        //handle_leds();                                  // Handle of the sideboard LEDs
 
+
+        log_i(")\r\n");
         main_loop_counter++;
 
     }

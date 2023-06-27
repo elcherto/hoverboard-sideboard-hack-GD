@@ -133,7 +133,7 @@
 
 /*
 PID ADJUST LOG:
-I no
+The balance scooter is rideable, but needs fine-tuning
 */
 
   #define def_kp             0.12 //0.1 - crazy oscillation; 0.05 - weak
@@ -145,11 +145,11 @@ I no
   #define def_sampleTime     10
   #define def_direction      1
 
-  //Delay at start is a bandaid to fix the uncontrollable motor spinning 5 sec after start
+  //Delay at start is a bandaid to fix the uncontrollable motor spoolup 5 sec after start
   #define DELAY_AT_START 5000             //At start, wait this amount of ms before activating motors
 
 
-
+  #define DEBUG
 
   #ifdef DEBUG
     #define SERIAL_DEBUG

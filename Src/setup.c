@@ -80,6 +80,9 @@ void gpio_config(void) {
     gpio_output_options_set(LED4_GPIO_Port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LED4_Pin);
     gpio_output_options_set(LED5_GPIO_Port, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, LED5_Pin);
 
+    /*configure ADC GPIO*/
+    gpio_mode_set(ADC_GPIO_PORT, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, ADC_GPIO_PIN);
+
     /* reset GPIO pin */
     gpio_bit_reset(LED1_GPIO_Port, LED1_Pin);
     gpio_bit_reset(LED2_GPIO_Port, LED2_Pin);
@@ -92,6 +95,10 @@ void gpio_config(void) {
     /* enable the GPIO clock */
     rcu_periph_clock_enable(RCU_GPIOA);
     rcu_periph_clock_enable(RCU_GPIOC);
+
+    /* enable the ADC clock*/
+    rcu_periph_clock_enable(RCU_ADC);
+    rcu_adc_clock_config(RCU_ADCCK_APB2_DIV6);
 
     /* configure GPIO port */
     gpio_mode_set(SENSOR1_GPIO_Port, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SENSOR1_Pin);
@@ -305,6 +312,24 @@ void usart_Rx_DMA_config(uint32_t selUSART, uint8_t *pData, uint32_t dSize) {
 
 }
 
+void adc_config(void){
+    /* ADC channel length config */
+    adc_channel_length_config(ADC_REGULAR_CHANNEL,1);
+    /* ADC regular channel config */
+    adc_regular_channel_config(0,BOARD_ADC_CHANNEL, ADC_SAMPLETIME_239POINT5);
+    /* ADC external trigger enable */
+    adc_external_trigger_config(ADC_REGULAR_CHANNEL, ENABLE);
+    /* ADC external trigger source config */ 
+    adc_external_trigger_source_config(ADC_REGULAR_CHANNEL, ADC_EXTTRIG_REGULAR_SWRCST);
+    /* ADC data alignment config */ 
+    adc_data_alignment_config(ADC_DATAALIGN_RIGHT);
+    /* enable ADC interface */
+    adc_enable();
+    /* ADC calibration and reset calibration */ 
+    adc_calibration_enable();
+    /* ADC software trigger enable */
+    adc_software_trigger_enable (ADC_REGULAR_CHANNEL);
+}
 
 void i2c_config(void) {
 

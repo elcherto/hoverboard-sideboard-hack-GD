@@ -43,6 +43,10 @@
 #define get_ms                      get_tick_count_ms
 #define log_i                       printf          // redirect the log_i debug function to printf
 
+/* =========================== Defines ADC =========================== */
+#define ADC_GPIO_PIN                GPIO_PIN_1
+#define ADC_GPIO_PORT               GPIOA
+#define BOARD_ADC_CHANNEL           ADC_CHANNEL_1
 
 /* =========================== Defines LEDs =========================== */
 #define LED1_GPIO_Port              GPIOA
@@ -68,6 +72,8 @@
 #define SENSOR1_Pin                 GPIO_PIN_4
 #define SENSOR2_GPIO_Port           GPIOC
 #define SENSOR2_Pin                 GPIO_PIN_14
+
+
 
 
 /* =========================== Defines USART =========================== */

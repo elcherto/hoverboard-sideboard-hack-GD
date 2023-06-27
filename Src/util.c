@@ -363,9 +363,7 @@ void pid_compute(PTR_PID_CONTROLLER pid){
                                -(pid->I_limit), 
                                 (pid->I_limit));
     //Remember last value for the Derivative
-
     pid->last_err = pid->err;
-
 }
 
 /*
